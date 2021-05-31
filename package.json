@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Charca/bootbot.git"
+    "url": "git+https://github.com/ngonimandie/bootbot.git"
   },
   "keywords": [
     "messenger",
@@ -22,11 +22,12 @@
   "author": "Maxi Ferreira <charca@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Charca/bootbot/issues"
+    "url": "https://github.com/ngonimandie/bootbot/issues"
   },
-  "homepage": "https://github.com/Charca/bootbot#readme",
+  "homepage": "https://github.com/ngonimandie/bootbot#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "bootbot": "^1.1.0",
     "config": "^1.21.0",
     "eventemitter3": "^1.2.0",
     "express": "^4.14.0",
