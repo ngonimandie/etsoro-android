@@ -1,6 +1,7 @@
 'use strict';
 const BootBot = require('./lib/BootBot');
 const config= require ('config')
+const echoModule = require('./examples/modules/echo');
 
 const bot = new BootBot({
     accessToken: config.get('access_token'),
@@ -8,12 +9,4 @@ const bot = new BootBot({
     appSecret: config.get('app_secret')
   });
   
-  bot.on('message', (payload, chat) => {
-    const text = payload.message.text;
-    chat.say(`Echo: ${text}`);
-  });
-  
-  bot.start();
-  
-
 module.exports = BootBot;
