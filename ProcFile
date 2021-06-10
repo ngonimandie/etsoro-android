@@ -1,0 +1,2 @@
+web: npm start
+mhanya: node index.js
