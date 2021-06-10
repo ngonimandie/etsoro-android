@@ -37,7 +37,12 @@ function jumpLine(doc, lines) {
 //Download file using express
 var express = require('express')
 var app = express()
-
+//Look for statics first
+app.use(express.static('public'));
+//Return the index for any other GET request
+app.get('/*', function (req, res) {
+    res.sendFile('index.html',  'public');
+});
 /**
  * Bot Verification
  */
@@ -167,7 +172,7 @@ const askGender = (convo) => {
 const askAge = (convo) => {
   convo.ask(`Please tell me your age in years... eg 25`, (payload, convo, data) => {
     const text = payload.message.text;
-    convo.set('age', text)
+    convo.set('age', text);
     convo.say('Ok').then(() => askEmail(convo));
 
     /*
@@ -433,15 +438,13 @@ const sendMail = (convo) => {
     to: "ngonimandie@gmail.com", // list of receivers
     subject: "Marathon Reg Confirmation ✔", // Subject line
     text: "Congratulations ${convo.get('name')} ${convo.get('surname')} ", // plain text body
-    html: "<b> Your Race number is N2348M</b> <br/> Use this number to Submit Results", // html body
+    html: "<b> Your Race number is N2357M</b> <br/> Use this number to Submit Results", // html body
   });
 
   console.log("Message sent: %s", info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-  // Preview only available when sending through an Ethereal account
   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+
 
 };
 
@@ -507,6 +510,9 @@ const askResultScreenshot = (convo) => {
 };
 
 const downloadCertificate = (convo) => {
+
+  convo.say('Certificate is being generated, aut-download will start in a moment').then(() => sendThankYouMessage(convo));
+  
 
   // Pipe its output somewhere, like to a file or HTTP response
   // See below for browser usage
@@ -743,13 +749,17 @@ const downloadCertificate = (convo) => {
 };
 
 const saveCertificate = (convo) => {
-  var server = app.listen(8081, () => {
-    console.log('Server is started on 127.0.0.1:8081')
+  var server = app.listen(1337, () => {
+    console.log('Server is started on 127.0.0.1:1337')
   })
   app.get('/downloadCertificate/', (req, res) => {
     res.download('./assets/certificates/vmarathon_certificate.pdf');
 
   })
+};
+const sendThankYouMessage = (convo) => {
+  convo.say('Thank you for participating in the Marathon for 2021');
+  convo.end();
 };
 
 bot.hear('Marathon', (payload, chat) => {
@@ -777,7 +787,6 @@ bot.hear('test pdf', (payload, chat) => {
   ));
 });
 
-bot.
 
 bot.hear('color', (payload, chat) => {
   chat.say({
