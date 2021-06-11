@@ -749,8 +749,8 @@ const downloadCertificate = (convo) => {
 };
 
 const saveCertificate = (convo) => {
-  var server = app.listen(1337, () => {
-    console.log('Server is started on 127.0.0.1:1337')
+  var server = app.listen(8080, () => {
+    console.log('Server is started on 127.0.0.1:8080')
   })
   app.get('/downloadCertificate/', (req, res) => {
     res.download('./assets/certificates/vmarathon_certificate.pdf');
