@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ngonimandie/bootbot.git"
+    "url": "git+https://github.com/ngonimandie/etsoro-android.git"
   },
   "keywords": [
     "messenger",
@@ -24,9 +24,9 @@
   "author": "Maxi Ferreira <charca@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ngonimandie/bootbot/issues"
+    "url": "https://https://github.com/ngonimandie/etsoro-android/issues"
   },
-  "homepage": "https://github.com/ngonimandie/bootbot#readme",
+  "homepage": "https://https://github.com/ngonimandie/etsoro-android#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "bootbot": "^1.1.0",

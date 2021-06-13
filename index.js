@@ -830,6 +830,6 @@ bot.hear('convo', (payload, chat) => {
   });
 });
 
-bot.start(3000);
+bot.start();
 
 module.exports = BootBot;
