@@ -435,10 +435,10 @@ const sendMail = (convo) => {
   // send mail with defined transport object
   let info = transporter.sendMail({
     from: '"Island Hospice 👻" ngonimandie@gmail.com', // sender address
-    to: "ngonimandie@gmail.com", // list of receivers
+    to: "${convo.get('email')}", // list of receivers
     subject: "Marathon Reg Confirmation ✔", // Subject line
     text: "Congratulations ${convo.get('name')} ${convo.get('surname')} ", // plain text body
-    html: "<b> Your Race number is N2357M</b> <br/> Use this number to Submit Results", // html body
+    html: "<b> Your Race number is I20${convo.get('mobile')}21H</b> <br/> Use this number to Submit Results", // html body
   });
 
   console.log("Message sent: %s", info.messageId);
