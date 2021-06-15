@@ -1,7 +1,9 @@
 'use strict';
 const BootBot = require('./lib/BootBot');
-const config = require('config')
+const dotenv = require('dotenv');
+dotenv.config();
 const echoModule = require('./examples/modules/echo');
+
 
 /*
  *Ecocash 
