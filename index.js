@@ -51,9 +51,9 @@ app.get('/*', function (req, res) {
  * Bot Verification
  */
 const bot = new BootBot({
-  accessToken: process.env.accessToken,
-  verifyToken: process.env.verifyToken,
-  appSecret: process.env.appSecret,
+  accessToken: process.env.PAGE_ACCESS_TOKEN,
+  verifyToken: process.env.VERIFY_TOKEN,
+  appSecret: process.env.APP_SECRET,
   //appSecret: config.get('app_secret')
 });
 //bot.module(echoModule);
