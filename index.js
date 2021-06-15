@@ -6,6 +6,10 @@ const echoModule = require('./examples/modules/echo');
 /*
  *Ecocash 
  */
+/**
+ * Test page access token :
+ * EAANJUh7qVgoBAO15uU0CbNILxjrZCpnNj2GhPDYxp5N3k0ZAbSrfCftRRhU0lZBvBLyCT79cGTQ3UcDg0wfLI4Eg1zHqB9MBTRCMo4r2SewDFgBvht9GiTJRzZBzm1FhxM6IMFvzS756584c3d64bQeudam9bgXEZAaTV0OEVqnjD2ibL4eiyd0EwpZAYMFXVGrIk3hN15RAZDZD
+ */
 const { Paynow } = require("paynow");
 let paynow = new Paynow("11207", "7cd5b3e7-87df-4ad0-9776-0491b491d35b");
 
@@ -75,13 +79,13 @@ const startMenu = (convo) => {
     {
       event: 'postback:MENU_SUBMIT_RESULTS',
       callback: (payload, convo) => {
-        convo.say(`Let's start the registration process`).then(() => askRaceNumber(convo));
+        convo.say(`Starting the Submission process`).then(() => askRaceNumber(convo));
       }
     },
     {
       event: 'postback:MENU_TELL_ME_MORE',
       callback: (payload, convo) => {
-        convo.say(`Let's start the registration process`).then(() => askName(convo));
+        convo.say(`Let's just chat. There isn't much more infortmation to talk about the marathon for now`).then(() => askName(convo));
       }
     }
     /*,
@@ -257,7 +261,7 @@ const askPaymentMethod = (convo) => {
     {
       event: 'postback:PAYMENT_METHOD_MENU_VISA',
       callback: (payload, convo) => {
-        convo.say(`Complete your VISA/Mastercard payment and type "Done" when you have paid`).then(() => confirmVisaPayment(convo));
+        convo.say(`Complete your VISA/Mastercard payment and type "Done" when you have paid`).then(() => confirmEcocashPayment(convo));
       }
 
     },
@@ -344,7 +348,9 @@ const confirmVisaPayment = (convo) => {
   convo.say(`Payment not complete`);
 
 };
-
+// Setting this to true would disable the text input on mobile
+// and the user will only be able to communicate via the persistent menu.
+const disableInput = false;
 const recordProgress = (convo) => {
   convo.ask((convo) => {
     const buttons = [
@@ -366,6 +372,7 @@ const recordProgress = (convo) => {
       event: 'postback:RECORD_PROGRESS_YES',
       callback: (payload, convo) => {
         convo.set(`has_fitness_app`, 'YES');
+        //bot.module(echoModule);
         bot.setPersistentMenu([
           {
             type: 'web_url',
@@ -382,11 +389,11 @@ const recordProgress = (convo) => {
             title: 'STRAVA',
             url: 'https://www.strava.com/login'
           }
-        ]);
+        ], disableInput);
 
 
 
-        convo.say('Use the above Link to register for the run').then(() => askCountry(convo));
+        convo.say('Make sure that you use the applications :ADIDAS RUNNING, NIKE RUN or STRAVA to register for the run').then(() => askCountry(convo));
       }
     },
     {
@@ -396,6 +403,48 @@ const recordProgress = (convo) => {
         convo.say('In order to register for the Marathon you need to pay a participation fee. This fee is ZWL$500 or USD$5. All proceeding are for fundraising').then(() => askPaymentAmount(convo));
       }
     },
+  ]);
+};
+const applicationLinks = (convo) => {
+  convo.ask((convo) => {
+    const buttons = [
+      { type: 'postback', title: 'STRAVA', payload: 'RUN_APP_STRAVA' },
+      { type: 'postback', title: 'NIKE RUN', payload: 'RUN_APP_NIKE' },
+      { type: 'postback', title: 'ADIDAS RUNNING', payload: 'RUN_APP_ADIDAS' },
+    ];
+    convo.sendButtonTemplate(`Use these app Links to register for the run`, buttons);
+  }, (payload, convo, data) => {
+    const text = payload.message.text;
+    convo.set('run_app_value', text);
+  }, [
+    {
+      event: 'postback',
+      callback: (payload, convo) => {
+        convo.say('Make sure that you have completed you are using one of the above apps');
+      }
+    },
+    {
+      event: 'postback:RUN_APP_STRAVA',
+      callback: (payload, convo) => {
+        convo.set(`race`, '5KM');
+        convo.say('In order to register for the Marathon you need to pay a participation fee. This fee is ZWL$500 or USD$5. All proceeding are for fundraising').then(() => askPaymentAmount(convo));
+      }
+    },
+    {
+      event: 'postback:RUN_APP_NIKE',
+      callback: (payload, convo) => {
+        convo.set(`race`, '10KM');
+        convo.say('In order to register for the Marathon you need to pay a participation fee. This fee is ZWL$500 or USD$5. All proceeding are for fundraising').then(() => askPaymentAmount(convo));
+      }
+    }, {
+      event: 'postback:RUN_APP_ADIDAS',
+      callback: (payload, convo) => {
+        convo.set(`run_app`, 'adidas');
+        http.get('*',function(req,res){  
+          res.redirect('http://exmple.com')
+      })
+      }
+    }
   ]);
 };
 const askCountry = (convo) => {
@@ -420,6 +469,8 @@ const askHowYouHeard = (convo) => {
   });
 };
 const sendMail = (convo) => {
+  const emailRecepient = convo.get('email');
+  const raceNumber= "I"+ convo.get('mobile') + "M";
 
   let testAccount = nodemailer.createTestAccount();
 
@@ -434,11 +485,44 @@ const sendMail = (convo) => {
 
   // send mail with defined transport object
   let info = transporter.sendMail({
-    from: '"Island Hospice 👻" ngonimandie@gmail.com', // sender address
-    to: "${convo.get('email')}", // list of receivers
+    from: '"Island Hospice 👻" namadingomwamba@gmail.com', // sender address
+    to: emailRecepient, // list of receivers
     subject: "Marathon Reg Confirmation ✔", // Subject line
     text: "Congratulations ${convo.get('name')} ${convo.get('surname')} ", // plain text body
-    html: "<b> Your Race number is I20${convo.get('mobile')}21H</b> <br/> Use this number to Submit Results", // html body
+    html: "<b> Your Race number is I20" +  "21H</b> <br/> Use this number to Submit Results", // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+};
+const sendCertificateMail = (convo) => {
+  const emailRecepientName = convo.get('name');
+  const emailRecepient = convo.get('email');
+  const raceNumber= "I"+ convo.get('mobile') + "M";
+
+  let testAccount = nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: 'namadingomwamba@gmail.com', // generated ethereal user
+      pass: 'Nama_@000', // generated ethereal password
+    },
+  });
+
+  // send mail with defined transport object
+  let info = transporter.sendMail({
+    from: '"Island Hospice 👻" namadingomwamba@gmail.com', // sender address
+    to: emailRecepient, // list of receivers
+    subject: "Certificate of Appreciation ✔", // Subject line
+    text: "Congratulations ${convo.get('name')} ${convo.get('surname')} ", // plain text body
+    html: "<b> Dear" + emailRecepientName+  "</b> <br/> Kindly find attached the certificate for your completion of the Island Hospice virtual Marathon", // html body
+    attachments: [
+      {   // file on disk as an attachment
+        filename: 'Certificate_of_appreciation_for_' + emailRecepientName +".pdf",
+        path: './public/Certificate_of_appreciation_for_' + emailRecepientName +'.pdf' // stream this file
+    },]
   });
 
   console.log("Message sent: %s", info.messageId);
@@ -505,18 +589,20 @@ const askResultScreenshot = (convo) => {
   convo.ask(`Please upload a screenshot of the results of your race`, (payload, convo, data) => {
     const image = payload.message.image;
     convo.set('result_screenshot', image);
-    downloadCertificate(convo);
+    downloadCertificate(convo).then(() => sendCertificateMail(convo));
   });
 };
 
 const downloadCertificate = (convo) => {
 
-  convo.say('Certificate is being generated, aut-download will start in a moment').then(() => sendThankYouMessage(convo));
-  
+  convo.say('Certificate is being generated, check your email for a pdf Certificate').then(() => sendThankYouMessage(convo));
+  const firstName= convo.get('name');
+  const lastName= convo.get('surname');
+  const race= convo.get('race');
 
   // Pipe its output somewhere, like to a file or HTTP response
   // See below for browser usage
-  doc.pipe(fs.createWriteStream('./assets/certificates/vmarathon_certificate.pdf'));
+  doc.pipe(fs.createWriteStream('./public/Certificate_of_appreciation_for_' + firstName +'.pdf'));
 
   doc.rect(0, 0, doc.page.width, doc.page.height).fill('#fff');
 
@@ -583,7 +669,7 @@ const downloadCertificate = (convo) => {
     .font('./assets/fonts/NotoSansJP-Bold.otf')
     .fontSize(24)
     .fill('#021c27')
-    .text('NGONIDZASHE MANDITSVANGA', {
+    .text(firstName +'' + lastName, {
       align: 'center',
     });
 
@@ -633,7 +719,7 @@ const downloadCertificate = (convo) => {
     .font('./assets/fonts/NotoSansJP-Bold.otf')
     .fontSize(10)
     .fill('#021c27')
-    .text('5 KM', startLine1, signatureHeight + 10, {
+    .text(race, startLine1, signatureHeight + 10, {
       columns: 1,
       columnGap: 0,
       height: 40,
@@ -657,7 +743,7 @@ const downloadCertificate = (convo) => {
     .font('./assets/fonts/NotoSansJP-Bold.otf')
     .fontSize(10)
     .fill('#021c27')
-    .text('Ngonidzashe Manditsvanga', startLine2, signatureHeight + 10, {
+    .text(firstName +' ' + lastName, startLine2, signatureHeight + 10, {
       columns: 1,
       columnGap: 0,
       height: 40,
