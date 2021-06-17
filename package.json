@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --recursive test/*",
     "test:watch": "npm test -- --watch",
-    "start": "set NODE_ENV=production&& node index.js",
+    "start": "node index.js",
     "start-prod": "set NODE_ENV=production&& node index.js"
   },
   "repository": {

@@ -4,6 +4,11 @@ const dotenv = require('dotenv');
 dotenv.config();
 const echoModule = require('./examples/modules/echo');
 
+//Download file using express
+var express = require('express')
+var app = express()
+app.listen(process.env.PORT || 3000);
+
 
 /*
  *Ecocash 
