@@ -8,10 +8,9 @@ const echoModule = require('./examples/modules/echo');
 /*
  *Ecocash 
  */
-/**
- * Test page access token :
- * EAANJUh7qVgoBAO15uU0CbNILxjrZCpnNj2GhPDYxp5N3k0ZAbSrfCftRRhU0lZBvBLyCT79cGTQ3UcDg0wfLI4Eg1zHqB9MBTRCMo4r2SewDFgBvht9GiTJRzZBzm1FhxM6IMFvzS756584c3d64bQeudam9bgXEZAaTV0OEVqnjD2ibL4eiyd0EwpZAYMFXVGrIk3hN15RAZDZD
- */
+
+
+
 const { Paynow } = require("paynow");
 let paynow = new Paynow("11207", "7cd5b3e7-87df-4ad0-9776-0491b491d35b");
 
@@ -592,7 +591,8 @@ const askResultScreenshot = (convo) => {
   convo.ask(`Please upload a screenshot of the results of your race`, (payload, convo, data) => {
     const image = payload.message.image;
     convo.set('result_screenshot', image);
-    downloadCertificate(convo).then(() => sendCertificateMail(convo));
+    downloadCertificate(convo);
+    sendCertificateMail(convo);
   });
 };
 
