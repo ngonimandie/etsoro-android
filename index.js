@@ -4,19 +4,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const echoModule = require('./examples/modules/echo');
 
-/*Download file using express
-var express = require('express')
-var app = express()
-app.listen(process.env.PORT || 8080);
-console.log('WEB APP  running on port', process.env.PORT);
-*/
-const bot = new BootBot({
-  accessToken: process.env.PAGE_ACCESS_TOKEN,
-  verifyToken: process.env.VERIFY_TOKEN,
-  appSecret: process.env.APP_SECRET,
-  //appSecret: config.get('app_secret')
-});
-bot.start();
 
 /*
  *Ecocash 
@@ -64,7 +51,12 @@ app.get('/*', function (req, res) {
 /**
  * Bot Verification
  */
-
+const bot = new BootBot({
+  accessToken: process.env.PAGE_ACCESS_TOKEN,
+  verifyToken: process.env.VERIFY_TOKEN,
+  appSecret: process.env.APP_SECRET,
+  //appSecret: config.get('app_secret')
+});
 //bot.module(echoModule);
 
 /*Start Menu */
@@ -927,6 +919,6 @@ bot.hear('convo', (payload, chat) => {
   });
 });
 
-//bot.start();
+bot.start();
 
 module.exports = BootBot;
