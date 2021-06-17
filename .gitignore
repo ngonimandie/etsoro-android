@@ -43,3 +43,6 @@ examples/config/production.json
 .vscode/settings.json
 
 .vercel
+
+#env file
+.env
